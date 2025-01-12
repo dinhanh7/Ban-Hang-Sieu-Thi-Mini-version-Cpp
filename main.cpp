@@ -1,455 +1,320 @@
-#include <fstream>
+#include "HangHoa.h"
+#include "GioHang.h"
+#include "HangHoa.cpp"
+#include "GioHang.cpp"
 #include <iostream>
+#include <fstream>
 #include <sstream>
-#include <iomanip>
-#include"HangHoa.cpp"
-#include"GioHang.cpp"
 #include <algorithm>
-#define PASSWORD 2
-
 using namespace std;
 
-void inDanhSachSanPham(vector<Hanghoa>& san_pham);
-void themSanPham( vector<Hanghoa>& san_pham);
-void xoaSanPham(vector<Hanghoa>& san_pham);
-void sua_san_pham(vector<Hanghoa>& san_pham);
-void swap(Hanghoa &a, Hanghoa &b);
-void sapXepTheoGia(vector<Hanghoa>& dssp);
-void sapXepTheoMaSanPham(vector<Hanghoa>& dssp);
-void sapXepTheoTen(vector<Hanghoa>& dssp);
-void timKiemTheoMaSanPham(vector<Hanghoa> dssp);
-void timKiemTheoTen(vector<Hanghoa> dssp);
-void sapXep(vector<Hanghoa>& dssp);
-void giaoDienTimKiem( vector<Hanghoa> san_pham);
-void giaoDienChinhSua( vector<Hanghoa>& san_pham);
-void giaoDienThanhToan(vector<Hanghoa>& san_pham, GioHang& quay_thanh_toan);
-void giaoDienChinh(vector<Hanghoa>& san_pham, GioHang& quay_thanh_toan);
-void doc_file(vector<Hanghoa> &san_pham);
-void xuat_file(vector<Hanghoa> &san_pham);
-
-void inDanhSachSanPham(vector<Hanghoa>& san_pham)
-{
-    cout << "\n<-------Danh sach cac san pham dang bay ban: -------> \n";
-    for(int i = 0; i < san_pham.size(); i++)
-    {
-        cout << i + 1 << ". ";
-        san_pham[i].xuat();
+// In danh sach san pham
+void inDanhSachSanPham(Node* head) {
+    Node* current = head;
+    cout << "\n<-------Danh sach cac san pham dang bay ban: ------->\n";
+    int index = 1;
+    while (current != nullptr) {
+        cout << index++ << ". ";
+        current->data.xuat();
+        current = current->next;
     }
 }
-void themSanPham( vector<Hanghoa>& san_pham){
-nhan:
+
+// Them san pham
+void themSanPham(Node*& head, Node*& tail) {
     Hanghoa new_item;
     new_item.nhap_de_them_sp();
-    new_item.ma_san_pham = "MDH"+string(4-to_string(san_pham.size()+1).length(),'0')+ to_string(san_pham.size()+1);
-    san_pham.push_back(new_item);
-    char lc;
-    cout << "Ban co muon tiep tuc khong (y/n) ?";
-    cin >> lc;
-    if(lc == 'y'){
-        goto nhan;
-    }
-}
-void xoaSanPham(vector<Hanghoa>& san_pham){
-nhan:
-    string ma_sp_xoa;
-    bool ktra = false;
-    cout << "Nhap ma san pham can xoa (MDHxxxx): ";
-    cin.ignore();
-    getline(cin,ma_sp_xoa);
-    transform(ma_sp_xoa.begin(), ma_sp_xoa.end(), ma_sp_xoa.begin(), ::toupper);
-    //chuc nang xoa san pham
-    for (int i = 0; i < san_pham.size(); i++) {
-        if (san_pham[i].layMaDonHang() == ma_sp_xoa) {
-            san_pham.erase(san_pham.begin() + i);
-            cout << "San pham da duoc xoa" << endl;
-            ktra = true;
-            break;
-        }
-    }
-    if(ktra == false){
-        cout << "Khong tim thay san pham voi ma da nhap!" << endl;
-    }
-    char lc;
-    cout << "Ban co muon tiep tuc xoa khong (y/n) ?";
-    cin >> lc;
-    if(lc == 'y'){
-        goto nhan;
-    }
-}
-void sua_san_pham(vector<Hanghoa>& san_pham){
-nhan:
-    string masp;
-    bool ktra = false;
-    cout << "Nhap ma so cua san pham can sua (MDHxxxx):";
-    cin.ignore();
-    getline(cin,masp);
-    transform(masp.begin(), masp.end(), masp.begin(), ::toupper);
-    for(int i = 0; i < san_pham.size(); i++){
-        if(san_pham[i].layMaDonHang() == masp){
-        string ten;
-        string ma;
-        double gia;
-        int soluong;
-        cout << "Nhap thong tin san pham moi: ";
-        cout << "\nNhap ten san pham moi: ";
-        // cin.ignore();
-        getline(cin,ten);
-        // cout << "\nNhap ma san pham moi: ";
-        // getline(cin,ma);
-        cout << "Nhap gia thanh san pham moi: ";
-        cin >> gia;
-        cout << "Nhap so luong san pham: ";
-        cin >> soluong;
-        san_pham[i].setTensp(ten);
-        san_pham[i].setGiasp(gia);
-        san_pham[i].setSoLuong(soluong);
-        ktra = true;
-        }
-    }
-    if(ktra == false){
-        cout << "Khong tim thay san pham voi ma da nhap!" << endl;
-    }
-    char lc;
-    cout << "Ban co muon tiep tuc xoa khong (y/n) ?";
-    cin >> lc;
-    if(lc == 'y'){
-        goto nhan;
-    }
-}
-void swap(Hanghoa &a, Hanghoa& b){
-    Hanghoa temp;
-    temp = a;
-    a = b;
-    b = temp;
-}
-void sapXepTheoGia(vector<Hanghoa>& dssp){
-    for(int i=0;i<dssp.size();i++){
-        for(int j = i+1;j<dssp.size();j++){
-            if(dssp[i] > dssp[j]){
-                swap(dssp[i],dssp[j]);
-            }
-        }
-    }
-    
-}
-void sapXepTheoMaSanPham(vector<Hanghoa>& dssp){ // chương trình tự sắp xếp theo mã sẵn rồi nên cái này thừa
-    // for(int i=0;i<dssp.size();i++){
-    //     for(int j = i+1;j<dssp.size();j++){
-    //         if(dssp[i].layMaDonHang() < dssp[j].layMaDonHang()){
-    //             swap(dssp[i],dssp[j]);
-    //         }
-    //     }
-    // }
-}
-void sapXepTheoTen(vector<Hanghoa>& dssp){
-    for (int i = 0; i < dssp.size(); i++) {
-        for (int j = i + 1; j < dssp.size(); j++) {
-            if (dssp[i].layTenSanPham() > dssp[j].layTenSanPham()) {
-                swap(dssp[i], dssp[j]);
-            }
-        }
-    }
-}
-void sapXep(vector<Hanghoa>& dssp){
-    int luachon;
-    cout << " __________________________________________________________________" << endl;
-    cout << "|                              SAP XEP                             |" << endl;
-    cout << "|__________________________________________________________________|" << endl;
-    cout << "|                                                                  |" << endl;
-    cout << "|  1.  Sap xep theo gia                                            |" << endl;
-    // cout << "|  2.  Sap xep theo ma san pham                                    |" << endl;
-    cout << "|  2.  Sap xep theo ten san pham                                   |" << endl;
-    cout << "|  3.  Quay lai trang chu                                          |" << endl;
-    cout << "|*________________________________________________________________*|" << endl;
-    cout <<" Nhap lua chon cua ban: ";
-    cin >> luachon;
-    switch(luachon){
-        case(1):
-            sapXepTheoGia(dssp);
-            break;
-        case(2):
-            sapXepTheoTen(dssp);
-            break;
-        case(3):
-            break;
-    }
-}
-void timKiemTheoMaSanPham( vector<Hanghoa> san_pham){
-nhan:
-    cin.ignore();
-    string ma_don_hang;
-    bool isExist = false;
-    cout << "Nhap ma don hang ban can tim kiem (MDHxxxx): ";
-    getline(cin,ma_don_hang);
-    for(int i = 0; i < san_pham.size(); i++){
-        if(san_pham[i].layMaDonHang() == ma_don_hang){
-            san_pham[i].xuat();
-            isExist = true; // da tim thay san pham
-            break;
-        }
-    }
-    //neu khong tim thay thi thong bao
-    if(!isExist){
-        cout << "Khong tim thay san pham voi ma da nhap\n";
-    }
-    char lc;
-    cout << "Ban co muon tiep tuc tim khong (y/n) ?";
-    cin >> lc;
-    if(lc == 'y'){
-        goto nhan;
-    }
-}
-void timKiemTheoTen( vector<Hanghoa> san_pham){
-nhan:
-    bool isExist = false;
-    cin.ignore();
-    string ten_san_pham;
-    cout << "Nhap ten san pham ban muon tim: ";
-    getline(cin,ten_san_pham);
-    for(int i = 0; i < san_pham.size(); i++){
-        if(san_pham[i].layTenSanPham() == ten_san_pham){
-            san_pham[i].xuat();
-            isExist = true; 
-            break;
-        }
-    }
-    //neu khong tim thay thi thong bao
-    if(!isExist){
-        cout << "Khong tim thay san pham voi ten da nhap\n";
-    }
-    char lc;
-    cout << "Ban co muon tiep tuc tim khong (y/n) ?";
-    cin >> lc;
-    if(lc == 'y'){
-        goto nhan;
-    }
-}
-void giaoDienTimKiem( vector<Hanghoa> san_pham){
-    // cin.ignore();
-    int choice_;
-    
-    cout << " __________________________________________________________________" << endl;
-    cout << "|                             TIM KIEM                             |" << endl;
-    cout << "|__________________________________________________________________|" << endl;
-    cout << "|                                                                  |" << endl;
-    cout << "|  1.  Tim kiem theo ten                                           |" << endl;
-    cout << "|  2.  Tim kiem theo ma san pham                                   |" << endl;
-    cout << "|  3.  Quay lai trang chu                                          |" << endl;
-    cout << "|*________________________________________________________________*|" << endl;
-    cout << "Nhap lua chon cua ban: ";
-    cin >> choice_;
-    switch(choice_){
-        case (1):
-            // cin.ignore();
-            timKiemTheoTen(san_pham);
-            break;
-        case (2):
-            timKiemTheoMaSanPham(san_pham);
-            break;
-        case (3):
-            break;
-    }
-}
-void giaoDienChinhSua( vector<Hanghoa>& san_pham){
-    //  
-    int _choice;
-    cout << " __________________________________________________________________" << endl;
-    cout << "|                         QUYEN CHINH SUA                          |" << endl;
-    cout << "|__________________________________________________________________|" << endl;
-    cout << "|                                                                  |" << endl;
-    cout << "|  1.  Them san pham                                               |" << endl;
-    cout << "|  2.  Xoa san pham                                                |" << endl;
-    cout << "|  3.  Thay doi san pham                                           |" << endl;
-    cout << "|  4.  Quay lai trang chu                                          |" << endl;
-    cout << "|*________________________________________________________________*|" << endl;
-        cout << "Nhap lua chon cua ban: ";
-        cin >> _choice;
-        switch (_choice){
-            case (1):
-                // 
-                themSanPham(san_pham);
-                break;
-            case (2):
-                xoaSanPham(san_pham);
-                break;
-            case (3):
-                sua_san_pham(san_pham);
-                break;
-            case (4):
-                break;
-            default:
-                cout << "Khong co tinh nang da nhap !";
-                break;
-            }
-    
-}
-void giaoDienThanhToan(vector<Hanghoa>& san_pham, GioHang& quay_thanh_toan)
-{
-    int choice_;
-    double phanTram = 0;
-    int STT_xoa = -1;
-    int STT_them = -1;
-    int so_luong = 1;
+    new_item.setMasp("MDH" + to_string(rand() % 10000));
 
-    
-    quay_thanh_toan.inGioHang();
-    cout << "\n";
-    cout << " __________________________________________________________________" << endl;
-    cout << "|                         THANH TOAN GIO HANG                      |" << endl;
-    cout << "|__________________________________________________________________|" << endl;
-    cout << "|                                                                  |" << endl;
-    cout << "|  1.  Them san pham                                               |" << endl;
-    cout << "|  2.  Xoa san pham                                                |" << endl;
-    cout << "|  3.  Thanh toan                                                  |" << endl;
-    cout << "|  4.  Quay lai trang chu                                          |" << endl;
-    cout << "|*________________________________________________________________*|" << endl;
-    cout << "Nhap lua chon cua ban: ";
-    cin >> choice_;
-    switch (choice_)
-    {
-    case 1:
-
-        inDanhSachSanPham(san_pham);
-        cout << "\nBan muon them san pham so bao nhieu: ";
-        cin >> STT_them;
-        cout << "\nNhap so luong muon mua cua san pham vua chon: ";
-        cin >> so_luong;
-        san_pham[STT_them-1].setSoLuong(so_luong);
-        quay_thanh_toan.themSanPham(san_pham[STT_them - 1]); // Them san pham co STT  tu danh sach vao gio hang
-        quay_thanh_toan.inGioHang();
-        giaoDienThanhToan(san_pham, quay_thanh_toan); // quay lai giao dien thanh toan
-        break;
-    case 2:
-        quay_thanh_toan.inGioHang();
-        cout << "\nBan muon xoa san pham so bao nhieu: ";
-        cin >> STT_xoa;
-        quay_thanh_toan.xoaSanPham(STT_xoa - 1); // Xoa san pham co STT STT ra khoi gio hang
-        quay_thanh_toan.inGioHang();
-        giaoDienThanhToan(san_pham, quay_thanh_toan); // quay lai giao dien thanh toan
-
-        break;
-    case 3:
-        cout << "\nNhap ti le giam gia: ";
-        cin >> phanTram;
-        quay_thanh_toan.apMaGiamGia(phanTram);
-        quay_thanh_toan.thanhToan();
-        break;
-    case 4:
-        break;
-    default:
-        break;
+    Node* newNode = new Node(new_item);
+    if (tail == nullptr) {
+        head = tail = newNode;
+    } else {
+        tail->next = newNode;
+        tail = newNode;
     }
 }
-void giaoDienChinh( vector<Hanghoa>& san_pham, GioHang& quay_thanh_toan){
-    int choice;
-do{
-    //  
-    cout << " __________________________________________________________________" << endl;
-    cout << "|                      QUAN LI CUA HANG MINI                       |" << endl;
-    cout << "|__________________________________________________________________|" << endl;
-    cout << "|                                                                  |" << endl;
-    cout << "|  1.  Tim kiem san pham                                           |" << endl;
-    cout << "|  2.  Xuat san pham trong kho                                     |" << endl;
-    cout << "|  3.  Quyen chinh sua                                             |" << endl;
-    cout << "|  4.  Thanh toan                                                  |" << endl;
-    cout << "|  5.  Sap xep                                                     |" << endl;
-    cout << "|  6.  In danh sach hien tai                                       |" << endl;
-    cout << "|  7.  Thoat                                                       |" << endl;
-    cout << "|*________________________________________________________________*|" << endl;
-    cout << "                                                                    " << endl;
-    cout << "Nhap lua chon cua ban [1-7]: ";
-    cin >> choice;
-    switch(choice){
-        case(1):
-            // cout <<"chay dc" << endl;
-            
-            giaoDienTimKiem(san_pham);
-            break;
-        case(2):
-            
-            xuat_file(san_pham);
-            cout << "Xuat danh sach san pham thanh cong! \n";
-            break;
-        case(3):
-            
-            int mat_khau;
-            cout << "Nhap mat khau de truy cap: ";
-            cin >> mat_khau;
-            if(mat_khau==PASSWORD){
-                int _choice;
-                giaoDienChinhSua(san_pham);
-                break;
+
+// Xoa san pham
+void xoaSanPham(Node*& head, Node*& tail, const string& ma_sp) {
+    Node* current = head;
+    Node* previous = nullptr;
+
+    while (current != nullptr) {
+        if (current->data.layMaDonHang() == ma_sp) {
+            if (previous == nullptr) { // Xoa dau
+                head = current->next;
+            } else {
+                previous->next = current->next;
             }
-            else{
-                cout << "Mat khau khong hop le !";
-                break;
+            if (current == tail) { // Xoa cuoi
+                tail = previous;
             }
-        case(4): 
-            
-            giaoDienThanhToan(san_pham, quay_thanh_toan);
+            delete current;
+            cout << "San pham da duoc xoa." << endl;
+            return;
+        }
+        previous = current;
+        current = current->next;
+    }
+    cout << "Khong tim thay san pham voi ma da nhap." << endl;
+}
+
+// Sua san pham
+void sua_san_pham(Node* head, const string& ma_sp) {
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->data.layMaDonHang() == ma_sp) {
+            string ten;
+            double gia;
+            int soluong;
+
+            cout << "Nhap ten san pham moi: ";
+            cin.ignore();
+            getline(cin, ten);
+
+            cout << "Nhap gia thanh san pham moi: ";
+            cin >> gia;
+
+            cout << "Nhap so luong san pham moi: ";
+            cin >> soluong;
+
+            current->data.setTensp(ten);
+            current->data.setGiasp(gia);
+            current->data.setSoLuong(soluong);
+
+            cout << "San pham da duoc sua." << endl;
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Khong tim thay san pham voi ma da nhap." << endl;
+}
+
+// Swap data giữa hai node
+void swap(Node* a, Node* b) {
+    Hanghoa temp = a->data;
+    a->data = b->data;
+    b->data = temp;
+}
+
+// Sap xep theo gia
+void sapXepTheoGia(Node* head) {
+    for (Node* i = head; i != nullptr; i = i->next) {
+        for (Node* j = i->next; j != nullptr; j = j->next) {
+            if (i->data.layGiaThanh() > j->data.layGiaThanh()) {
+                swap(i, j);
+            }
+        }
+    }
+}
+
+// Sap xep theo ma san pham
+void sapXepTheoMaSanPham(Node* head) {
+    for (Node* i = head; i != nullptr; i = i->next) {
+        for (Node* j = i->next; j != nullptr; j = j->next) {
+            if (i->data.layMaDonHang() > j->data.layMaDonHang()) {
+                swap(i, j);
+            }
+        }
+    }
+}
+
+// Sap xep theo ten
+void sapXepTheoTen(Node* head) {
+    for (Node* i = head; i != nullptr; i = i->next) {
+        for (Node* j = i->next; j != nullptr; j = j->next) {
+            if (i->data.layTenSanPham() > j->data.layTenSanPham()) {
+                swap(i, j);
+            }
+        }
+    }
+}
+
+// Sap xep
+void sapXep(Node* head, int luaChon) {
+    switch (luaChon) {
+        case 1:
+            sapXepTheoGia(head);
             break;
-        case(5): 
-            
-            sapXep(san_pham);
-            cout << "Sap xep thanh cong! \n";
+        case 2:
+            sapXepTheoMaSanPham(head);
             break;
-        case(6): 
-            
-            cout << "Shop gui quy khach danh sach san pham hien co :\n";
-            inDanhSachSanPham(san_pham);
+        case 3:
+            sapXepTheoTen(head);
             break;
-        case(7):
-            
-            cout <<"Cam on ban da su dung chuong trinh !";
-            exit(0);
         default:
-            
-            cout << "Lua chon cua ban chua hop le, vui long chon lai !" << endl;
-            break;
+            cout << "Lua chon khong hop le." << endl;
     }
-    // break;
-} while (true);
 }
-void doc_file(vector<Hanghoa> &san_pham){
-    // /home/hoangtung/Documents/giay.txt
-    ifstream file("C:\\Users\\WINDOWS\\OneDrive - Hanoi University of Science and Technology\\Desktop\\giay.txt");// thay doi duong dan trong window nhu sau: E:\\ .....
+
+// Tim kiem theo ma san pham
+void timKiemTheoMaSanPham(Node* head, const string& ma_sp) {
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->data.layMaDonHang() == ma_sp) {
+            current->data.xuat();
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Khong tim thay san pham voi ma da nhap." << endl;
+}
+
+// Tim kiem theo ten
+void timKiemTheoTen(Node* head, const string& ten_sp) {
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->data.layTenSanPham() == ten_sp) {
+            current->data.xuat();
+            return;
+        }
+        current = current->next;
+    }
+    cout << "Khong tim thay san pham voi ten da nhap." << endl;
+}
+
+// Giao dien tim kiem
+void giaoDienTimKiem(Node* head) {
+    int luaChon;
+    cout << "\n1. Tim kiem theo ma san pham";
+    cout << "\n2. Tim kiem theo ten san pham";
+    cout << "\nNhap lua chon: ";
+    cin >> luaChon;
+
+    if (luaChon == 1) {
+        string ma_sp;
+        cout << "Nhap ma san pham: ";
+        cin.ignore();
+        getline(cin, ma_sp);
+        timKiemTheoMaSanPham(head, ma_sp);
+    } else if (luaChon == 2) {
+        string ten_sp;
+        cout << "Nhap ten san pham: ";
+        cin.ignore();
+        getline(cin, ten_sp);
+        timKiemTheoTen(head, ten_sp);
+    } else {
+        cout << "Lua chon khong hop le." << endl;
+    }
+}
+
+// Doc file
+void doc_file(Node*& head, Node*& tail, const string& fileName) {
+    ifstream file(fileName);
     if (!file.is_open()) {
         cout << "Khong the mo file!" << endl;
+        return;
     }
+
     string line;
-    // int dem_vec = 0;
-    // san_pham.size();
-    while(getline(file,line)){
+    while (getline(file, line)) {
         istringstream iss(line);
-        Hanghoa temp;
-        getline(iss, temp.ma_san_pham, ',');
-        getline(iss, temp.san_pham, ',');
-        iss >> temp.gia_thanh;
-        iss.ignore(); 
-        iss >> temp.so_luong;
+        string ma, ten;
+        double gia;
+        int soluong;
 
-        san_pham.push_back(temp);
-        // dem_vec++;
+        getline(iss, ma, ',');
+        getline(iss, ten, ',');
+        iss >> gia;
+        iss.ignore();
+        iss >> soluong;
+
+        Hanghoa sp(ten, ma, gia, soluong);
+        Node* newNode = new Node(sp);
+        if (tail == nullptr) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
     }
     file.close();
 }
-void xuat_file(vector<Hanghoa> &san_pham){
-    ofstream file("C:\\Users\\WINDOWS\\OneDrive - Hanoi University of Science and Technology\\Desktop\\xuat hoa don.txt");
+
+// Xuat file
+void xuat_file(Node* head, const string& fileName) {
+    ofstream file(fileName);
     if (!file.is_open()) {
-        cout << "Không thể mở file!" << endl;
+        cout << "Khong the mo file!" << endl;
+        return;
     }
-    for(vector<Hanghoa> :: iterator x = san_pham.begin();x!= san_pham.end();x++){
-        file << x->layMaDonHang() << "," << x->layTenSanPham() << "," << x->layGiaThanh() << "," << x->laySoLuong() << endl;
+
+    Node* current = head;
+    while (current != nullptr) {
+        file << current->data.layMaDonHang() << "," << current->data.layTenSanPham()
+             << "," << current->data.layGiaThanh() << "," << current->data.laySoLuong() << endl;
+        current = current->next;
     }
     file.close();
 }
 
-int main()
-{
-    GioHang quay_thanh_toan;
-    vector<Hanghoa> danh_sach_san_pham;
+// Main
+int main() {
+    Node* head = nullptr;
+    Node* tail = nullptr;
 
-    doc_file(danh_sach_san_pham);
-    giaoDienChinh(danh_sach_san_pham, quay_thanh_toan);
-  
+    doc_file(head, tail, "hanghoa.txt");
+
+    int luaChon;
+    do {
+        cout << "\n1. Xem danh sach san pham";
+        cout << "\n2. Them san pham";
+        cout << "\n3. Xoa san pham";
+        cout << "\n4. Sua san pham";
+        cout << "\n5. Sap xep san pham";
+        cout << "\n6. Tim kiem san pham";
+        cout << "\n7. Xuat danh sach ra file";
+        cout << "\n8. Thoat";
+        cout << "\nNhap lua chon: ";
+        cin >> luaChon;
+
+        switch (luaChon) {
+            case 1:
+                inDanhSachSanPham(head);
+                break;
+            case 2:
+                themSanPham(head, tail);
+                break;
+            case 3: {
+                string ma_sp;
+                cout << "Nhap ma san pham can xoa: ";
+                cin.ignore();
+                getline(cin, ma_sp);
+                xoaSanPham(head, tail, ma_sp);
+                break;
+            }
+            case 4: {
+                string ma_sp;
+                cout << "Nhap ma san pham can sua: ";
+                cin.ignore();
+                getline(cin, ma_sp);
+                sua_san_pham(head, ma_sp);
+                break;
+            }
+            case 5: {
+                int loaiSapXep;
+                cout << "\n1. Sap xep theo gia";
+                cout << "\n2. Sap xep theo ma san pham";
+                cout << "\n3. Sap xep theo ten";
+                cout << "\nNhap lua chon: ";
+                cin >> loaiSapXep;
+                sapXep(head, loaiSapXep);
+                break;
+            }
+            case 6:
+                giaoDienTimKiem(head);
+                break;
+            case 7:
+                xuat_file(head, "hoadon.txt");
+                break;
+            case 8:
+                cout << "Thoat chuong trinh." << endl;
+                break;
+            default:
+                cout << "Lua chon khong hop le." << endl;
+        }
+    } while (luaChon != 8);
+
+    return 0;
 }

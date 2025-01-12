@@ -1,22 +1,28 @@
 #pragma once
-#include"HangHoa.h"
+#include "HangHoa.h"
 
+class Node {
+public:
+    Hanghoa data;
+    Node* next;
 
+    Node(Hanghoa sanPham) : data(sanPham), next(nullptr) {}
+};
 
-class GioHang
-{
+class GioHang {
 private:
-    std::vector<Hanghoa> gioHang;
+    Node* head;               // Con trỏ đầu danh sách liên kết
+    Node* tail;               // Con trỏ cuối danh sách liên kết
     double tienThanhToan;
     int soLuongHang;
     double phanTramGiamGia;
 
-    void capNhatTienThanhToan(); // De cap nhat tien khi them hoac xoa san pham
+    void capNhatTienThanhToan(); // Cập nhật tiền khi thêm hoặc xóa sản phẩm
+
 public:
     GioHang();
     void themSanPham(Hanghoa sanPham);
     void xoaSanPham(int index);
-
     void inGioHang();
     void apMaGiamGia(double phanTram);
     void thanhToan();
@@ -24,8 +30,6 @@ public:
     double layTienThanhToan();
     int laySoLuongHang();
     double layPhanTramGiamGia();
-    
+
     ~GioHang();
 };
-
-

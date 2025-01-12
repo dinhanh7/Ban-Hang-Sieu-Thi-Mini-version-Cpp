@@ -1,95 +1,81 @@
-#include"HangHoa.h"
+#include "HangHoa.h"
 
-Hanghoa::Hanghoa()
-{
+Hanghoa::Hanghoa() : san_pham(""), ma_san_pham(""), gia_thanh(0), so_luong(0) {}
 
-}
 Hanghoa::Hanghoa(string sanPham, string maSanPham, double giaThanh)
-{
-    this->san_pham = sanPham;
-    this->ma_san_pham = maSanPham;
-    this->gia_thanh = giaThanh;
-}
+    : san_pham(sanPham), ma_san_pham(maSanPham), gia_thanh(giaThanh), so_luong(0) {}
 
 Hanghoa::Hanghoa(string sanPham, string maSanPham, double giaThanh, int soLuong)
-{
-    this->san_pham = sanPham;
-    this->ma_san_pham = maSanPham;
-    this->gia_thanh = giaThanh;
-    this->so_luong = soLuong;
+    : san_pham(sanPham), ma_san_pham(maSanPham), gia_thanh(giaThanh), so_luong(soLuong) {}
+
+void Hanghoa::nhap() {
+    cout << "Nhap ten san pham: ";
+    cin.ignore();
+    getline(cin, san_pham);
+    cout << "Nhap ma san pham: ";
+    getline(cin, ma_san_pham);
+    cout << "Nhap gia thanh: ";
+    cin >> gia_thanh;
+    cout << "Nhap so luong: ";
+    cin >> so_luong;
 }
 
-
-
-
-double Hanghoa::layGiaThanh(){
-    return gia_thanh;
+void Hanghoa::nhap_de_them_sp() {
+    cout << "Nhap ten san pham: ";
+    cin.ignore();
+    getline(cin, san_pham);
+    cout << "Nhap gia thanh: ";
+    cin >> gia_thanh;
+    cout << "Nhap so luong: ";
+    cin >> so_luong;
 }
 
-string Hanghoa:: layTenSanPham(){
-    return san_pham;
+void Hanghoa::xuat() {
+    cout << san_pham << "    " << ma_san_pham << "     " << gia_thanh << " VND     x" << so_luong << endl;
 }
-string Hanghoa::layMaDonHang(){
+
+void Hanghoa::setTensp(string tensp) {
+    san_pham = tensp;
+}
+
+void Hanghoa::setMasp(string ma) {
+    ma_san_pham = ma;
+}
+
+void Hanghoa::setGiasp(double gia) {
+    gia_thanh = gia;
+}
+
+void Hanghoa::setSoLuong(int soLuong) {
+    so_luong = soLuong;
+}
+
+string Hanghoa::layMaDonHang() {
     return ma_san_pham;
 }
 
-int Hanghoa::laySoLuong()
-{
+string Hanghoa::layTenSanPham() {
+    return san_pham;
+}
+
+double Hanghoa::layGiaThanh() {
+    return gia_thanh;
+}
+
+int Hanghoa::laySoLuong() {
     return so_luong;
 }
 
-void Hanghoa::setTensp(string tensp){
-    san_pham=tensp;
-}
-void Hanghoa::setMasp(string ma){
-    ma_san_pham=ma;
-}
-void Hanghoa::setGiasp(double gia){
-    gia_thanh=gia;
-}
-
-void Hanghoa::setSoLuong(int soLuong)
-{
-    so_luong = soLuong;
-}
-void Hanghoa::nhap(){
-    cout << "Nhap thong tin san pham: ";
-    cout << "\nNhap ten san pham: ";
-    getline(cin,san_pham);
-    cin.ignore();
-    cout << "\nNhap ma san pham: ";
-    getline(cin,ma_san_pham);
-    cin.ignore();
-    cout << "\nNhap gia thanh san pham: ";
-    cin >> gia_thanh;
-    cout << "\nNhap so luong san pham: ";
-    cin >> so_luong;
-}
-void Hanghoa::xuat(){
-    cout << " " << san_pham << "    " << ma_san_pham << "     " << gia_thanh << "VND     x" << so_luong <<  endl;
-}
-
-void Hanghoa::nhap_de_them_sp(){
-    cout << "Nhap thong tin san pham: ";
-    cout << "\nNhap ten san pham: ";
-    cin.ignore();
-    getline(cin,san_pham);
-    cout << "Nhap gia thanh san pham: ";
-    cin >> gia_thanh;
-    cout << "Nhap so luong san pham: ";
-    cin >> so_luong;
-}
-Hanghoa Hanghoa::operator= (const Hanghoa& a){
-    if(this != &a){
-        san_pham=a.san_pham;
-        gia_thanh=a.gia_thanh;
-        ma_san_pham=a.ma_san_pham;
-        so_luong=a.so_luong; 
+Hanghoa Hanghoa::operator=(const Hanghoa& other) {
+    if (this != &other) {
+        san_pham = other.san_pham;
+        ma_san_pham = other.ma_san_pham;
+        gia_thanh = other.gia_thanh;
+        so_luong = other.so_luong;
     }
     return *this;
 }
 
-bool Hanghoa::operator>(const Hanghoa& other)
-{
-    return this->gia_thanh > other.gia_thanh;
+bool Hanghoa::operator>(const Hanghoa& other) {
+    return gia_thanh > other.gia_thanh;
 }

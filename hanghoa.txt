@@ -1,0 +1,5 @@
+MDH0001,Ao thun,200000,5
+MDH0002,Quan jeans,500000,2
+MDH0003,Giay the thao,700000,3
+MDH0004,Mu luoi trai,150000,10
+MDH0005,Balo du lich,300000,4
