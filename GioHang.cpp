@@ -46,6 +46,9 @@ void GioHang::xoaSanPham(int index) {
 
     if (current == tail) { // Xóa cuối
         tail = previous;
+        if (tail == nullptr) { // Sửa lỗi rò rỉ bộ nhớ: Xử lý trường hợp danh sách chỉ có 1 phần tử
+            head = nullptr;
+        }
     }
 
     delete current;
@@ -64,21 +67,22 @@ void GioHang::inGioHang() {
     }
 }
 
-double GioHang::layTienThanhToan() {
+double GioHang::layTienThanhToan() const { // Thêm const
     return tienThanhToan;
 }
 
-int GioHang::laySoLuongHang() {
+int GioHang::laySoLuongHang() const { // Thêm const
     return soLuongHang;
 }
 
-double GioHang::layPhanTramGiamGia() {
+double GioHang::layPhanTramGiamGia() const { // Thêm const
     return phanTramGiamGia;
 }
 
 void GioHang::apMaGiamGia(double phanTram) {
     phanTramGiamGia = phanTram;
-    tienThanhToan *= (1 - phanTram / 100);
+    capNhatTienThanhToan(); // Tính lại tổng tiền TRƯỚC khi áp dụng giảm giá
+    tienThanhToan *= (1 - phanTram / 100); // Sau đó mới áp dụng giảm giá
 }
 
 void GioHang::thanhToan() {

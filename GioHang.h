@@ -11,8 +11,8 @@ public:
 
 class GioHang {
 private:
-    Node* head;               // Con trỏ đầu danh sách liên kết
-    Node* tail;               // Con trỏ cuối danh sách liên kết
+    Node* head;         // Con trỏ đầu danh sách liên kết
+    Node* tail;         // Con trỏ cuối danh sách liên kết
     double tienThanhToan;
     int soLuongHang;
     double phanTramGiamGia;
@@ -27,9 +27,9 @@ public:
     void apMaGiamGia(double phanTram);
     void thanhToan();
 
-    double layTienThanhToan();
-    int laySoLuongHang();
-    double layPhanTramGiamGia();
+    double layTienThanhToan() const; // Thêm const
+    int laySoLuongHang() const; // Thêm const
+    double layPhanTramGiamGia() const; // Thêm const
 
     ~GioHang();
 };
