@@ -4,6 +4,8 @@
 #include <iomanip>
 #include "HangHoa.h"
 #include "GioHang.h"
+#include "HangHoa.cpp"
+#include "GioHang.cpp"
 #include <algorithm>
 #include <string> // Đã có sẵn, không cần thêm lại
 #define PASSWORD 2

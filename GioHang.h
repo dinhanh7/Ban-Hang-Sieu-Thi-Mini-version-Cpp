@@ -1,13 +1,7 @@
 #pragma once
 #include "HangHoa.h"
 
-class Node {
-public:
-    Hanghoa data;
-    Node* next;
 
-    Node(Hanghoa sanPham) : data(sanPham), next(nullptr) {}
-};
 
 class GioHang {
 private:

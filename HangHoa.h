@@ -31,3 +31,10 @@ public:
     Hanghoa operator=(const Hanghoa& other);
     bool operator>(const Hanghoa& other);
 };
+class Node {
+public:
+    Hanghoa data;
+    Node* next;
+
+    Node(Hanghoa sanPham) : data(sanPham), next(nullptr) {}
+};
