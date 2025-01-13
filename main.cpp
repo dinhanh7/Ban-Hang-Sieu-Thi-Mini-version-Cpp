@@ -33,6 +33,16 @@ void themSanPham(Node*& head, Node*& tail) {
         tail->next = newNode;
         tail = newNode;
     }
+
+    // Ghi thông tin sản phẩm vào file "hanghoa.txt"
+    ofstream file("hanghoa.txt", ios::app);
+    if (file.is_open()) {
+        file << new_item.layMaDonHang() << "," << new_item.layTenSanPham()
+             << "," << new_item.layGiaThanh() << "," << new_item.laySoLuong() << endl;
+        file.close();
+    } else {
+        cout << "Khong the mo file de ghi." << endl;
+    }
 }
 
 // Xoa san pham
