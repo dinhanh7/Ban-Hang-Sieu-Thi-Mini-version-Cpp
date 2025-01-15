@@ -30,6 +30,21 @@ void giaoDienChinh(Node*& head, Node*& tail, GioHang& quay_thanh_toan);
 void doc_file(Node*& head, Node*& tail);
 void xuat_file(Node* head);
 
+void ghiLaiDanhSach(Node* head) {
+    ofstream file("hanghoa.txt");
+    if (!file.is_open()) {
+        cout << "Khong the mo file de ghi du lieu!" << endl;
+        return;
+    }
+
+    Node* current = head;
+    while (current != nullptr) {
+        file << current->data.layMaDonHang() << "," << current->data.layTenSanPham()
+             << "," << current->data.layGiaThanh() << "," << current->data.laySoLuong() << endl;
+        current = current->next;
+    }
+    file.close();
+}
 // Hiển thị danh sách sản phẩm
 void inDanhSachSanPham(Node* head) {
     std::cout << "\n<-------Danh sach cac san pham dang bay ban: -------> \n"; // Thêm std::
@@ -44,11 +59,23 @@ void inDanhSachSanPham(Node* head) {
 
 // Thêm sản phẩm mới vào danh sách
 void themSanPham(Node*& head, Node*& tail) {
+    static int currentID = 1; // Biến tĩnh để lưu số thứ tự
+    Node* tempHead=head;
+    Node* tempTail=tail;
+    while(tempHead!=tempTail->next){
+        currentID++;
+        tempHead=tempHead->next;
+    }
     do {
         Hanghoa new_item;
         new_item.nhap_de_them_sp();
-        new_item.setMasp("MDH" + string(4 - to_string(rand() % 10000).length(), '0') + to_string(rand() % 10000));
 
+        // Tạo mã sản phẩm dạng MDH0001, MDH0002,...
+        string masp = "MDH" + string(4 - to_string(currentID).length(), '0') + to_string(currentID);
+        new_item.setMasp(masp);
+        currentID++; // Tăng mã sản phẩm sau mỗi lần thêm
+
+        // Tạo nút mới và thêm vào danh sách
         Node* newNode = new Node(new_item);
         if (tail == nullptr) {
             head = tail = newNode;
@@ -56,7 +83,7 @@ void themSanPham(Node*& head, Node*& tail) {
             tail->next = newNode;
             tail = newNode;
         }
-
+        ghiLaiDanhSach(head);
         char lc;
         cout << "Ban co muon tiep tuc khong (y/n) ?";
         cin >> lc;
@@ -87,12 +114,13 @@ void xoaSanPham(Node*& head, Node*& tail) {
                 }
                 delete current;
                 cout << "San pham da duoc xoa" << endl;
+                ghiLaiDanhSach(head);
                 break;
             }
             previous = current;
             current = current->next;
         }
-
+        
         char lc;
         cout << "Ban co muon tiep tuc xoa khong (y/n) ?";
         cin >> lc;
@@ -127,6 +155,7 @@ void sua_san_pham(Node* head) {
                 current->data.setGiasp(gia);
                 current->data.setSoLuong(soluong);
                 cout << "San pham da duoc sua." << endl;
+                ghiLaiDanhSach(head);
                 break;
             }
             current = current->next;
@@ -155,6 +184,7 @@ void sapXepTheoGia(Node* head) {
             }
         }
     }
+    ghiLaiDanhSach(head);
 }
 
 // Sắp xếp sản phẩm theo tên
@@ -166,6 +196,7 @@ void sapXepTheoTen(Node* head) {
             }
         }
     }
+    ghiLaiDanhSach(head);
 }
 
 // Menu sắp xếp sản phẩm
